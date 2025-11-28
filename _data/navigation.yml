@@ -1,0 +1,20 @@
+# main links
+main:
+  - title: "Setup"
+    url: /pages/setup
+  - title: "Mesh"
+    url: /pages/mesh
+  - title: "Rasterization"
+    url: /pages/rasterization
+  - title: "Transformation"
+    url: /pages/transformation
+  - title: "Linear Primitives"
+    url: /pages/linear
+  - title: "Deformation"
+    url: /pages/deformation
+  - title: "Animation"
+    url: /pages/animation
+  - title: "VR"
+    url: /pages/vr
+
+
