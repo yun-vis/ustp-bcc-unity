@@ -6,22 +6,22 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2025-04-22
+last_modified_at: 2026-04-10
 ---
 
 # Procedural Mesh
 
 ## Pre-setting before scripts
 * Step0: Structure upcoming projects. Create an empty game object, name ---PROCEDURALMESH---
-* Step1: Create an empty game object, name MeshObject
-* Step2: Add Component -> Mesh Filter (A Reference to the mesh)
+* Step1: Create an empty game object under ---PROCEDURALMESH---, name MeshObject
+* Step2: In Inspectpr -> Add Component -> Mesh Filter (A Reference to the mesh)
 * Step3: Add Component -> Mesh Render (A Mesh Renderer component renders a mesh)
 * Step4 (Opt): Attach an exising script. Drag the script file to the game object in the scene panel or to the inspector
 
 
-MyMesh.cs
+In Assets/Scripts/Mesh/Mesh.cs
 ```csharp
-using System.Collections;
+// using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,7 +34,7 @@ using UnityEngine;
 public class MyMesh : MonoBehaviour
 {
     private Mesh _mesh;
-    private YValue _yValue;
+    // [SerializeField] private YValue _yValue;
 
     private List<Vector3> _vertices;
     private List<int> _triangles;
@@ -42,7 +42,7 @@ public class MyMesh : MonoBehaviour
     // First lifecycle function called when a new instance of an object is created. Always called before any Start functions. If a GameObject is inactive during start up, Awake is not called until it is made active.
     void Awake()
     {
-        _yValue = GetComponent<YValue>();
+        // _yValue = GetComponent<YValue>();
         _mesh = GetComponent<MeshFilter>().mesh;
         _vertices = new List<Vector3>();
         _triangles = new List<int>();
@@ -66,6 +66,7 @@ public class MyMesh : MonoBehaviour
     {
         // Create an arrary of vertices
         _vertices.Add(new Vector3(0, 0, 0));
+        // _vertices.Add(new Vector3(0, _yValue.value, 0));
         _vertices.Add(new Vector3(0, 0, 1));
         _vertices.Add(new Vector3(1, 0, 0));
 
@@ -113,9 +114,9 @@ public class MyMesh : MonoBehaviour
 * Increase YValue to 1.0
 * Draw Mode -> Shaded Wireframe
 
-MyMesh6V.cs
+In Assets/Scripts/Mesh/Mesh6V.cs
 ```csharp
-using System.Collections;
+// using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -128,8 +129,8 @@ using UnityEngine;
 public class MyMesh6V : MonoBehaviour
 {
     private Mesh _mesh;
-    private YValue _yValue;
-        
+    [SerializeField] private YValue _yValue;
+
     private List<Vector3> _vertices;
     private List<int> _triangles;
 
@@ -201,7 +202,7 @@ public class MyMesh6V : MonoBehaviour
 }
 ```
 
-YValue.cs
+In Assets/Scripts/Mesh/YValue.cs
 ```csharp
 using UnityEngine;
 
@@ -209,7 +210,7 @@ using UnityEngine;
 
 public class YValue : MonoBehaviour
 {
-    public float value;
+    [SerializeField] internal float value;
     
     // Start is called before the first frame update
     void Start()
@@ -223,7 +224,7 @@ public class YValue : MonoBehaviour
 }
 ```
 
-CubData.cs
+In Assets/Scripts/Mesh/CubData.cs
 ```csharp
 using UnityEngine;
 
@@ -268,7 +269,7 @@ public class CubeData
 }
 ```
 
-CubeMesh.cs
+In Assets/Scripts/Mesh/CubeMesh.cs,
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -335,7 +336,9 @@ public class CubeMesh : MonoBehaviour
 }
 ```
 
-MyGrid.cs
+For testing, set CellSize = 5 and GridSize = 5.
+
+In Assets/Scripts/Mesh/Grid.cs,
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -343,6 +346,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+
 public class MyGrid : MonoBehaviour
 {
     private Mesh _mesh;

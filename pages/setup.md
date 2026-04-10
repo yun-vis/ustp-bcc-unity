@@ -6,44 +6,46 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2025-04-20
+last_modified_at: 2026-04-09
 ---
 
 # Unity Environment Setup
 
-## Unity 
+## Unity
 
-* Version used in the class: 2022.3.61f1 
+* Version used in the class: Unity 6.3 LTS (6000.3.6f1) 
 * Installation via Unity Hub [Link](https://unity.com/unity-hub)
 
-## JetBrains Rider as the script editor
+## Visual Studio Code as the script editor
+
+<!-- ## JetBrains Rider as the script editor
 
 * Version used in the class: 2025.1 
-* Offical Website [Link](jetbrains.com/rider/download/)
+* Offical Website [Link](jetbrains.com/rider/download/) -->
 
 ## Preferences
 
 ### Set up Script Editor
-Edit > Preferences > External Tools > External Script Editor
+Edit > Preferences > External Tools > External Script Editor -> Visual Studio Code
 
 ### Set up Playmode tint
 Edit > Preferences > Colors > General: Playmode tint
 
-## Window -> Package Manager
+<!-- ## Window -> Package Manager
 
 ### JetBrains Rider Editor
 ### Input System (from Lucas's lecture)
 Edit > Project Settings > Input System Package > Create
 Add Rigidbody component > 
-Add player Input component > Creat Actions (/Inputs/)
+Add player Input component > Creat Actions (/Inputs/) -->
 
 ## Version Control
 
-### Unity Version Control (Previously Plastic SCM) [Doc](https://unity.com/solutions/version-control)
+<!-- ### Unity Version Control (Previously Plastic SCM) [Doc](https://unity.com/solutions/version-control)
 
 - Window > Package Manager > Version Control
 - Setup guide [Doc](https://unity.com/support-services/redeem/plastic-scm)
-- Step1: Login to Unity Version Control
+- Step1: Login to Unity Version Control -->
 
 ### Git
 
