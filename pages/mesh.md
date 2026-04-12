@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2026-04-10
+last_modified_at: 2026-04-12
 ---
 
 # Procedural Mesh
@@ -18,6 +18,99 @@ last_modified_at: 2026-04-10
 * Step3: Add Component -> Mesh Render (A Mesh Renderer component renders a mesh)
 * Step4 (Opt): Attach an exising script. Drag the script file to the game object in the scene panel or to the inspector
 
+## Settings to triangles
+* Add materials: Mesh Renderer -> Materials -> Default-Diffuse
+* Increase YValue to 1.0
+* Draw Mode -> Shaded Wireframe
+  
+In Assets/Scripts/Mesh/Mesh6V.cs
+```csharp
+// using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// The RequireComponent attribute automatically adds required components as dependencies.
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(YValue))]
+
+// MonoBehaviour is the base class that every Unity script has to be inherited.  A Unity script, that is derived from a MonoBehaviour, serves a bunch of predefined functions(Awake, Start, Update, OnTriggerEnter, etc.) that are executed when an event occurs.
+public class MyMesh6V : MonoBehaviour
+{
+    private Mesh _mesh;
+    [SerializeField] private YValue _yValue;
+
+    private List<Vector3> _vertices;
+    private List<int> _triangles;
+
+    void Awake()
+    {
+        _yValue = GetComponent<YValue>();
+        _mesh = GetComponent<MeshFilter>().mesh;
+        _vertices = new List<Vector3>();
+        _triangles = new List<int>();
+    }
+
+    // These functions are known as event functions since they are activated by Unity in response to events that occur during gameplay
+    // Start is called before the first frame update
+    // void Start()
+    // Update is called once per frame
+    void Update()
+    {
+        CreateTriangleData();
+        // CreateQuadData();
+        UpdateMesh();
+    }
+
+    void CreateTriangleData()
+    {
+        // Create an arrary of vertices
+        _vertices.Add(new Vector3(0, 0, 0));
+        _vertices.Add(new Vector3(0, 0, 1));
+        _vertices.Add(new Vector3(1, 0, 0));
+
+        // Create an integer list
+        _triangles.Add(0);
+        _triangles.Add(1);
+        _triangles.Add(2);
+    }
+
+    void CreateQuadData()
+    {
+        // Create an arrary of vertices
+        _vertices.Add(new Vector3(0, 0, 0));
+        // _vertices.Add(new Vector3(0, _yValue.value, 0));
+        _vertices.Add(new Vector3(0, 0, 1));
+        _vertices.Add(new Vector3(1, 0, 0));
+
+        _vertices.Add(new Vector3(1, 0, 0));
+        _vertices.Add(new Vector3(0, 0, 1));
+        _vertices.Add(new Vector3(1, 0, 1));
+
+        // 1st triangle
+        _triangles.Add(0);
+        _triangles.Add(1);
+        _triangles.Add(2);
+
+        // 2nd triangle
+        _triangles.Add(3);
+        _triangles.Add(4);
+        _triangles.Add(5);
+    }
+
+    void UpdateMesh()
+    {
+        // Clear all vertex data and all triangle indices
+        _mesh.Clear();
+
+        // Assign our vertices and triangles to mesh object
+        _mesh.vertices = _vertices.ToArray();
+        _mesh.triangles = _triangles.ToArray();
+        
+        _mesh.RecalculateNormals();
+    }
+}
+```
 
 In Assets/Scripts/Mesh/Mesh.cs
 ```csharp
@@ -51,8 +144,8 @@ public class MyMesh : MonoBehaviour
     // Start is called before the first frame update only if the script instance is enabled.
     void Start()
     {
-        CreateTriangleData();
-        // CreateQuadData();
+        // CreateTriangleData();
+        CreateQuadData();
         UpdateMesh();
     }
 
@@ -93,99 +186,6 @@ public class MyMesh : MonoBehaviour
         _triangles.Add(1);
         _triangles.Add(3);
         _triangles.Add(2);
-    }
-
-    void UpdateMesh()
-    {
-        // Clear all vertex data and all triangle indices
-        _mesh.Clear();
-
-        // Assign our vertices and triangles to mesh object
-        _mesh.vertices = _vertices.ToArray();
-        _mesh.triangles = _triangles.ToArray();
-        
-        _mesh.RecalculateNormals();
-    }
-}
-```
-
-## Settings to triangles
-* Add materials: Mesh Renderer -> Materials -> Default-Diffuse
-* Increase YValue to 1.0
-* Draw Mode -> Shaded Wireframe
-
-In Assets/Scripts/Mesh/Mesh6V.cs
-```csharp
-// using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-// The RequireComponent attribute automatically adds required components as dependencies.
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(YValue))]
-
-// MonoBehaviour is the base class that every Unity script has to be inherited.  A Unity script, that is derived from a MonoBehaviour, serves a bunch of predefined functions(Awake, Start, Update, OnTriggerEnter, etc.) that are executed when an event occurs.
-public class MyMesh6V : MonoBehaviour
-{
-    private Mesh _mesh;
-    [SerializeField] private YValue _yValue;
-
-    private List<Vector3> _vertices;
-    private List<int> _triangles;
-
-    void Awake()
-    {
-        _yValue = GetComponent<YValue>();
-        _mesh = GetComponent<MeshFilter>().mesh;
-        _vertices = new List<Vector3>();
-        _triangles = new List<int>();
-    }
-
-    // These functions are known as event functions since they are activated by Unity in response to events that occur during gameplay
-    // Start is called before the first frame update
-    // void Start()
-    // Update is called once per frame
-    void Update()
-    {
-        // CreateTriangleData();
-        CreateQuadData();
-        UpdateMesh();
-    }
-
-    void CreateTriangleData()
-    {
-        // Create an arrary of vertices
-        _vertices.Add(new Vector3(0, 0, 0));
-        _vertices.Add(new Vector3(0, 0, 1));
-        _vertices.Add(new Vector3(1, 0, 0));
-
-        // Create an integer list
-        _triangles.Add(0);
-        _triangles.Add(1);
-        _triangles.Add(2);
-    }
-
-    void CreateQuadData()
-    {
-        // Create an arrary of vertices
-        _vertices.Add(new Vector3(0, _yValue.value, 0));
-        _vertices.Add(new Vector3(0, 0, 1));
-        _vertices.Add(new Vector3(1, 0, 0));
-
-        _vertices.Add(new Vector3(1, 0, 0));
-        _vertices.Add(new Vector3(0, 0, 1));
-        _vertices.Add(new Vector3(1, 0, 1));
-
-        // 1st triangle
-        _triangles.Add(0);
-        _triangles.Add(1);
-        _triangles.Add(2);
-
-        // 2nd triangle
-        _triangles.Add(3);
-        _triangles.Add(4);
-        _triangles.Add(5);
     }
 
     void UpdateMesh()
