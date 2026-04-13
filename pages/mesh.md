@@ -144,13 +144,16 @@ public class MyMesh6V : MonoBehaviour
 
     // These functions are known as event functions since they are activated by Unity in response to events that occur during gameplay
     // Start is called before the first frame update
-    // void Start()
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
         // CreateTriangleData();
         CreateQuadData();
         UpdateMesh();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
     }
 
     void CreateTriangleData()
@@ -271,7 +274,6 @@ public class CubeData
 
 In Assets/Scripts/Mesh/CubeMesh.cs,
 ```csharp
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
