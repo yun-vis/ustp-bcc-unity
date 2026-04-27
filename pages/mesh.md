@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2026-04-12
+last_modified_at: 2026-04-27
 ---
 
 # Procedural Mesh
@@ -53,7 +53,11 @@ public class MyMesh6V : MonoBehaviour
 
     // These functions are known as event functions since they are activated by Unity in response to events that occur during gameplay
     // Start is called before the first frame update
-    // void Start()
+    // Will not be updated with Gizmos since it is only created at start up
+    void Start()
+    {
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -202,105 +206,6 @@ public class MyMesh : MonoBehaviour
 }
 ```
 
-<<<<<<< HEAD
-## Settings to triangles
-* Add materials: Mesh Renderer -> Materials -> Default-Diffuse
-* Increase YValue to 1.0
-* Draw Mode -> Shaded Wireframe
-
-In Assets/Scripts/Mesh/Mesh6V.cs
-```csharp
-// using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-// The RequireComponent attribute automatically adds required components as dependencies.
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(YValue))]
-
-// MonoBehaviour is the base class that every Unity script has to be inherited.  A Unity script, that is derived from a MonoBehaviour, serves a bunch of predefined functions(Awake, Start, Update, OnTriggerEnter, etc.) that are executed when an event occurs.
-public class MyMesh6V : MonoBehaviour
-{
-    private Mesh _mesh;
-    [SerializeField] private YValue _yValue;
-
-    private List<Vector3> _vertices;
-    private List<int> _triangles;
-
-    void Awake()
-    {
-        _yValue = GetComponent<YValue>();
-        _mesh = GetComponent<MeshFilter>().mesh;
-        _vertices = new List<Vector3>();
-        _triangles = new List<int>();
-    }
-
-    // These functions are known as event functions since they are activated by Unity in response to events that occur during gameplay
-    // Start is called before the first frame update
-    void Start()
-    {
-        // CreateTriangleData();
-        CreateQuadData();
-        UpdateMesh();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    void CreateTriangleData()
-    {
-        // Create an arrary of vertices
-        _vertices.Add(new Vector3(0, 0, 0));
-        _vertices.Add(new Vector3(0, 0, 1));
-        _vertices.Add(new Vector3(1, 0, 0));
-
-        // Create an integer list
-        _triangles.Add(0);
-        _triangles.Add(1);
-        _triangles.Add(2);
-    }
-
-    void CreateQuadData()
-    {
-        // Create an arrary of vertices
-        _vertices.Add(new Vector3(0, _yValue.value, 0));
-        _vertices.Add(new Vector3(0, 0, 1));
-        _vertices.Add(new Vector3(1, 0, 0));
-
-        _vertices.Add(new Vector3(1, 0, 0));
-        _vertices.Add(new Vector3(0, 0, 1));
-        _vertices.Add(new Vector3(1, 0, 1));
-
-        // 1st triangle
-        _triangles.Add(0);
-        _triangles.Add(1);
-        _triangles.Add(2);
-
-        // 2nd triangle
-        _triangles.Add(3);
-        _triangles.Add(4);
-        _triangles.Add(5);
-    }
-
-    void UpdateMesh()
-    {
-        // Clear all vertex data and all triangle indices
-        _mesh.Clear();
-
-        // Assign our vertices and triangles to mesh object
-        _mesh.vertices = _vertices.ToArray();
-        _mesh.triangles = _triangles.ToArray();
-        
-        _mesh.RecalculateNormals();
-    }
-}
-```
-
-=======
->>>>>>> b507f68e4ec4c8823da837330be98d901d7e1bcb
 In Assets/Scripts/Mesh/YValue.cs
 ```csharp
 using UnityEngine;
@@ -582,7 +487,7 @@ public class MyGrid : MonoBehaviour
 }
 ```
 
-UnityPlane.cs
+In Assets/Scripts/Mesh/UnityPlane.cs
 ```csharp
 ```
 
@@ -596,3 +501,6 @@ Data annotations (available as part of the System. ComponentModel. DataAnnotatio
 ## Component-Based Architecture [Doc](https://www.tutorialspoint.com/software_architecture_design/component_based_architecture.htm)
 
 Component-Oriented Versus Object-Oriented Programming [Doc](https://www.oreilly.com/library/view/programming-net-components/0596102070/ch01s02.html)
+
+
+## 3D Gizmos [Doc](https://docs.unity3d.com/560/Documentation/Manual/GizmosMenu.html)

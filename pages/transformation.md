@@ -6,47 +6,57 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2025-05-09
+last_modified_at: 2026-04-27
 ---
+
+# Prerequisites
+
+* No need to use scripts from the previous lecture.
 
 # GameObjects
 
-Every object in your game is a GameObject, from characters and collectible items to lights, cameras and special effects. 
+Every object in your game is a GameObject, from characters and collectible items to lights, cameras and special effects. For better understanding, tackle **Move/Transform Tool** in the Scene view toolbar.
  
 * Position: Position of the Transform in the x, y, and z coordinates.
 * Rotation: Rotation of the Transform around the x-axis, y-axis, and z-axis, measured in degrees.
 * Scale: Scale of the Transform along the x-axis, y-axis, and z-axis. The value “1” is the original size (the size at which you imported the GameObject).
-* Enable Constrained Proportions: Force the scale to maintain its current proportions, so that changing one axis changes the other two axes. Disabled by default.
+* Enable Constrained Proportions: Force the scale to maintain its current proportions, so that changing one axis changes the other two axes. Disabled by default. One can find the button next to the [Scale](https://docs.unity3d.com/2023.2/Documentation/Manual/class-ScaleConstraint.html) in the inspector.
 
 # Gizmo
 
 In Unity, gizmos are visual aids drawn in the Scene view to help with debugging and visualization during development, not during runtime. 
 
 * For position: Click the Pivot/Center button on the left to toggle between Pivot and Center.
-  * Pivot positions the Gizmo at the actual pivot point of the GameObject, as defined by the Transform component.
+  * Pivot positions the Gizmo at the actual pivot point of the parent GameObject, as defined by the Transform component.
   * Center positions the Gizmo at a center position based on the selected GameObjects.
 * For rotation: Click the Local/Global button on the right to toggle between Local and Global.
   * Local keeps the Gizmo’s rotation relative to the GameObject’s.
   * Global clamps the Gizmo to world space orientation.
+* Between Center and Pivot. Select the Translate tool.
+  * Step1: Create 2 cubes (e.g., Cube1, Cube2) from the 3D obecjt and observe the similarity
+  * Step2: Child Cube2 object to another Cube1. Now one see the difference
+* Between Global and Local. Select the Rotate tool.
+  * Step1: Select one cube object.
+  * Step2: Choose the Local mode and rotate the cube. Rotate it to non-trival angles.
+  * Step3: Choose the Global mode, observe the Gizmo, and rotate the cube again.
 
 # Rotation
 
 ## Euler Angle vs. Quaternion
 
 * Pre-setting before scripts
-  * Step1: Create a GameObeject MyCubes that is composed of multiple cubes. Press "v" to enable vertex snapping during translation.
-  * Step2: Set up Pivot vs. Center (calculated by BoundingBox) of the another two empty GameObject
-What is a Bounding Box? A bounding box (Axis-Aligned Bounding Box and Oriented Bounding Box) is an automatically-created invisible box that defines the rough size of an entity.
-  
+  * Step1: Create a GameObeject MyCube thats is composed of multiple cubes (e.g., 3 cubes). Press "v" to enable vertex snapping during translation.
+  <!-- * Step2: Set up Pivot vs. Center (calculated by BoundingBox) of the another two empty GameObject
+    * What is a Bounding Box? A bounding box (Axis-Aligned Bounding Box and Oriented Bounding Box) is an automatically-created invisible box that defines the rough size of an entity. -->
+
 * Global vs local rotation
-  * Step1: Create an empty game object, name Containter and drag MyCubes to be the child
+  * Step1: Create a script Assets/Scripts/Transformation/Rotation.cs and attach it to MyCubes
+  * Step2: Create an empty game object, name Containter and drag MyCubes to be the child
+
 * Pivot point
   * Step1: Add a method RotateAroundPoint() in the script
-* RotateAround
-  * Step1: Create an empty game object, name SolarSystem.
-  * Step2: Create three sphere game objects, name Sun (s=1), Earth (s=0.5), and Moon (s=0.3). Drag game objects to be nested in hierarchy of SolarSystem. Attach the script to Earth and later Moon.
 
-Rotation.cs
+In Assets/Scripts/Transformation/Rotation.cs
 ```csharp
 using System;
 using System.Collections;
@@ -72,10 +82,11 @@ public class Rotation : MonoBehaviour
         // Change object position
         transform.position = new Vector3(0, 0, 0);
 
-        // Change object rotation in Euler angles
+        // Change object rotation in Euler angles in Global space
         // The rotation as Euler angles in degrees.
         transform.eulerAngles = new Vector3(0, 45, 0);
         // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 45, 0);
+        // transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + 45, transform.eulerAngles.z);
 
         // There are in principle 2 types of rotations in CG. 
         // One is using Euler angle, and the other is using Quaternion. 
@@ -92,55 +103,55 @@ public class Rotation : MonoBehaviour
         // transform.rotation = objectRotation;
 
         // Instead of working in Quaternions, you can convert a Vector 3 Euler Angle rotation into a Quaternion.
-        // A Quaternion that stores the rotation of the Transform in world space.
+        // A Quaternion that stores the rotation of the Transform in Global space.
         // equal to transform.eulerAngles =  new Vector3(0, 45, 0);
         transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
         // Quaternion.operator *
         // https://docs.unity3d.com/ScriptReference/Quaternion-operator_multiply.html
         // transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0)) * Quaternion.Euler(new Vector3(0, 45, 0));
 
-
         // Generally speaking, Unity uses Quaternions because they’re efficient and avoid
         // some of the problems of using Euler Angles, such as gimbal lock, which is the
         // loss of a degree of movement when two axes are aligned the same way.
-        // rotation vs. Rotate()
 
-        // Local rotation vs world rotation
-        // By default, when setting rotation directly, you’re setting the object’s world rotation
-        // Setting the world rotation of a child object will rotate it into that position absolutely.
+        // Local rotation vs Global rotation
+        // By default, when setting rotation directly, you’re setting the object’s Global rotation
+        // Setting the Global rotation of a child object will rotate it into that position absolutely.
 
         // Local position/rotation/scale, is that transformation relative to its parent.
         // Global is the combination of a GameObject's local transformation with all of
         // its parents, to the root of the scene.
 
-        // World/Global Rotation
+        // Global Rotation
         // With/without roatating the parent object Container -30 degrees around the X-Axis
         // transform.eulerAngles = new Vector3(0, 45, 0);
+        // transform.eulerAngles = new Vector3(transform.eulerAngles.x, 45, transform.eulerAngles.z);
         // same as above
-        transform.rotation = Quaternion.Euler(new Vector3(0,45, 0));
+        transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
+        // transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, 45, transform.eulerAngles.z));
 
         // Local Rotation
         // With/without roatating the parent object Container -30 degrees around the X-Axis
         // Debug.Log(transform.localRotation.eulerAngles.y);
         // transform.localEulerAngles = new Vector3(0, 0, transform.localRotation.eulerAngles.y-30);
-        // transform.localEulerAngles = new Vector3(0, 30, 0);
         transform.localEulerAngles = new Vector3(0, 45, 0);
         // same as above
-        // transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -30));
+        // transform.localRotation = Quaternion.Euler(new Vector3(0, 45, 0));
 
         // Creating a parent object is an easy way to move the pivot point of an object.
+        // Unchild Container and MyCubes
         // case 1: 
         transform.parent.rotation = Quaternion.Euler(new Vector3(0, 15, 0));
         transform.localRotation = Quaternion.Euler(new Vector3(0, 30, 0));
         // The game object will end up with 45 degrees (rotated along y-axis.) This will equal to
- 
+
         // case 2: 
         transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
-  
+
         // case 3: 
         transform.parent.rotation = Quaternion.Euler(new Vector3(0, 15, 0));
         transform.rotation = Quaternion.Euler(new Vector3(0, 45, 0));
-        // because in case 3, the angle in global space overwrite the angle in local space.
+        // because in case 3, the angle in Global space overwrite the angle in Local space.
     }
 
     // Update is called once per frame
@@ -162,10 +173,10 @@ public class Rotation : MonoBehaviour
 
     void RotateAroundPoint()
     {
-        // Debug.Log("Pivot Point: " + pivotPoint);
         // Vector3 pivotPoint = new Vector3(0, 0, 0);
         Vector3 pivotPoint = new Vector3(-1.5f, 0, 0.5f);
         // Vector3 pivotPoint = _parentTransform.position;
+        Debug.Log("Pivot Point: " + pivotPoint);
 
         // Rotates around the pivot point and the Y-Axis by 90 degrees
         // Vector3.left for the X-Axis, Vector3.up for the Y-Axis and Vector3.forward for the Z-Axis.
@@ -174,7 +185,13 @@ public class Rotation : MonoBehaviour
 }
 ```
 
-SolarSystem.cs
+
+* RotateAround
+  * Step1: Create an empty game object, name SolarSystem.
+  * Step2: Create three sphere game objects, name Sun (s=1), Earth (s=0.5, z=2), and Moon (s=0.3. z=1.2). Drag game objects to be nested in hierarchy of SolarSystem. Attach the script to Earth and later Moon.
+
+
+In Assets/Scripts/Transformation/SolarSystem.cs
 ```csharp
 using System;
 using System.Collections;
