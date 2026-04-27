@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2025-05-10
+last_modified_at: 2026-04-27
 ---
 
 # Raycasting
@@ -24,18 +24,12 @@ Raycasting is a technique for detecting collisions in 3D space by simulating a "
     * Wall3: Position(1.5,0,3), Scale(2,1,1)
   * Step2: Create another Cube GameObject "RayOrigin" and attach the script Raycasting
     * RayOrigin: Position(5,0,0)
-  * Step3: Create another Cube GameObject "RayReflection" and attach the script RaycastingReflection
-    * RayOrigin: Position(5,0,0)
-  * Step4: Reflection set to 3 and MaxLength set to 100
-  * Step5: Add "Mirror" tag to the Wall 1-3
-  * Step6: Enable LineRenderer.CornerVertices to make the line looks smoother. i.e., 10.
-  * Step7: Enable LineRenderer.EndCapVertices to make the line looks smoother. i.e., 10.
-  * Step8: Change the width or add material...
+
     
 ### Unity Layer
 Layers are a tool that allows you to separate GameObjects in your scenes. You can use layers through the UI and with scripts to edit how GameObjects within your scene interact with each other.
 
-Raycasting.cs
+In Assets/Scripts/Linear/Raycasting.cs
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -57,18 +51,8 @@ public class Raycasting : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Creates a Ray from this object, moving forward
-        // Vector3.left for the X-Axis, Vector3.up for the Y-Axis and Vector3.forward for the Z-Axis.
-        // _ray = new Ray(transform.position, transform.forward);
-
-        // Creates a Ray from the center of the viewport
-        // _ray = Camera.main.ViewportPointToRay(new Vector3 (0.5f, 0.5f, 0));
-
-        // Creates a Ray from the mouse position
-        // _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        layers = LayerMask.GetMask("Default");
-        // layers = LayerMask.GetMask("World") | LayerMask.GetMask("Water");
+        // layers = LayerMask.GetMask("Default");
+        layers = LayerMask.GetMask("World") | LayerMask.GetMask("Water");
         // layers = 1<<9;
         // Debug.Log("test!");
     }
@@ -81,8 +65,15 @@ public class Raycasting : MonoBehaviour
 
     void FireRay()
     {
-        // Set ray origin and direction
-        _ray = new Ray(transform.position, transform.forward);
+        // Creates a Ray from this object, moving forward
+        // Vector3.left for the X-Axis, Vector3.up for the Y-Axis and Vector3.forward for the Z-Axis.
+       _ray = new Ray(transform.position, transform.forward);
+
+        // Creates a Ray from the center of the viewport
+        // _ray = Camera.main.ViewportPointToRay(new Vector3 (0.5f, 0.5f, 0));
+        // Creates a Ray from the mouse position
+        // _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         // Visualize the ray in debug
         Debug.DrawRay(_ray.origin, _ray.direction * 10);
 
@@ -94,7 +85,7 @@ public class Raycasting : MonoBehaviour
             Vector3 hitPosition = _hitData.point;
             float hitDistance = _hitData.distance;
             // Reads the Collider name
-            string name = _hitData.collider.name;
+            // string name = _hitData.collider.name;
             // Gets a Game Object reference from its Transform
             GameObject hitObject = _hitData.transform.gameObject;
 
@@ -107,7 +98,15 @@ public class Raycasting : MonoBehaviour
 
 ## Raycasting Reflection
 
-RaycastReflection.cs
+  * Step3: Create another Cube GameObject "RayReflection" and attach the script RaycastingReflection
+    * RayOrigin: Position(5,0,0)
+  * Step4: Reflection set to 3 and MaxLength set to 100
+  * Step5: Add "Mirror" tag to the Wall 1-3
+  * Step6: Enable LineRenderer.CornerVertices to make the line looks smoother. i.e., 10.
+  * Step7: Enable LineRenderer.EndCapVertices to make the line looks smoother. i.e., 10.
+  * Step8: Change the width or add material...
+
+In Assets/Scripts/Linear/RaycastReflection.cs
 ```csharp
 using System;
 using System.Collections;
@@ -186,7 +185,7 @@ public class RaycastReflection : MonoBehaviour
   * Step3: Drag the curve script to the Curve game object and set control points to 4
   * Step4: Drag control points to the corresponding control point elements
 
-Curve2D.cs
+In Assets/Scripts/Linear/Curve2D.cs
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -194,7 +193,7 @@ using UnityEngine;
 
 // Pre-setting before scripts
 // Step1: Create an empty game object, name Curve.
-// Step2: Create 4 empty game objects, name ControlPoint1-4 and select icon for them (under inspector text).
+// Step2: Create 4 empty game objects, name ControlPoint1-4 and select icon for them (under inspector text). ControlPoints should be placed as children of the Curve object
 // Step3: Drag the curve script to the Curve game object and set control points to 4
 // Step4: Drag control points to the corresponding control point elements
 
@@ -206,13 +205,11 @@ public class Curve2D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
     
     private void OnDrawGizmos()
@@ -234,7 +231,7 @@ public class Curve2D : MonoBehaviour
 }
 ```
 
-Curve3D.cs
+In Assets/Scripts/Linear/Curve3D.cs
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -249,13 +246,11 @@ public class Curve3D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 
     private void OnDrawGizmos()
@@ -263,7 +258,7 @@ public class Curve3D : MonoBehaviour
         // Draw the interpolated points using spheres
         for (float t = 0; t <= 1; t += 0.05f)
         {
-             Vector3 gizmosPosition = Mathf.Pow(1 - t, 3) * controlPoints[0].position + 3 * Mathf.Pow(1 - t, 2) * t * controlPoints[1].position + 3 * (1 - t) * Mathf.Pow(t, 2) * controlPoints[2].position + Mathf.Pow(t, 3) * controlPoints[3].position;
+            Vector3 gizmosPosition = Mathf.Pow(1 - t, 3) * controlPoints[0].position + 3 * Mathf.Pow(1 - t, 2) * t * controlPoints[1].position + 3 * (1 - t) * Mathf.Pow(t, 2) * controlPoints[2].position + Mathf.Pow(t, 3) * controlPoints[3].position;
 
             Gizmos.DrawSphere(gizmosPosition, 0.25f);
         }
@@ -271,7 +266,6 @@ public class Curve3D : MonoBehaviour
         // Draw the lines between the control points
         Gizmos.DrawLine(controlPoints[0].position, controlPoints[1].position);
         Gizmos.DrawLine(controlPoints[2].position, controlPoints[3].position);
-
         // Gizmos.DrawLine(new Vector3(controlPoints[0].position.x, controlPoints[0].position.y, controlPoints[0].position.z), new Vector3(controlPoints[1].position.x, controlPoints[1].position.y, controlPoints[1].position.z));
         // Gizmos.DrawLine(new Vector3(controlPoints[2].position.x, controlPoints[2].position.y, controlPoints[2].position.z), new Vector3(controlPoints[3].position.x, controlPoints[3].position.y, controlPoints[3].position.z));
     }
@@ -281,9 +275,9 @@ public class Curve3D : MonoBehaviour
 * Pre-setting before scripts
   * Step1: Create a cube game object called Follower and attach the script to it.
   * Step2: Change the Route size in the inspector to 1 and drag the Curve object there.
-  * Step3: Create the 2nd Curve object and change the Route size to 2 in the inspector.
+  * Step3 (Optional): Create the 2nd Curve object and change the Route size to 2 in the inspector.
 
-CurveFollow.cs
+In Assets/Scripts/Linear/CurveFollow.cs
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -352,3 +346,4 @@ public class CurveFollow : MonoBehaviour
 ---
 # External Resources
 
+## [Write and run coroutines](https://docs.unity3d.com/6000.3/Documentation/Manual/Coroutines.html)
