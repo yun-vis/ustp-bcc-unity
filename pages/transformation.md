@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2026-04-27
+last_modified_at: 2026-05-11
 ---
 
 # Prerequisites
@@ -189,9 +189,9 @@ Potential errors: If the result does not look quite right, check if the parent p
 
 * RotateAround
   * Step1: Create an empty game object, name SolarSystem.
-  * Step2: Create three sphere game objects, name Sun (s=1), Earth (s=0.5), and Moon (s=0.3). Drag game objects to be nested in hierarchy of SolarSystem. Moon appears to the the child of Earth, and Earth is the child of the Sun. Attach the script to Earth and later Moon.
+  * Step2: Create three sphere game objects, name Sun (s=1), Earth (s=0.5, z=2.0), and Moon (s=0.3, z=1.5). Drag game objects to be nested in hierarchy of SolarSystem. Moon appears to the the child of Earth, and Earth is the child of the Sun. Attach the script to Earth and later Moon.
   
-SolarSystem.cs
+In Assets/Scripts/Transformation/SolarSystem.cs
 ```csharp
 using System;
 using System.Collections;
@@ -246,14 +246,14 @@ public class SolarSystem : MonoBehaviour
     internal void RotateOrbitSlant()
     {
         _angle += _degreesPerSecond * Time.deltaTime;
-        _angle %= 360;
+        // _angle %= 360;
         // Debug.Log("angle = " + angle);
 
         // Rotate a vector by multiplying it by a Quaternion
         // Vector3.forward Z-Axis unit vector
         Vector3 orbit = Vector3.forward * _radius;
         // orbit = Quaternion.Euler(0, angle, 0) * orbit;
-        orbit = Quaternion.LookRotation(_direction) * Quaternion.Euler(0, _angle, 0) * orbit;
+        orbit = Quaternion.LookRotation(_direction) * Quaternion.Euler(0, _angle%360, 0) * orbit;
         // Revolution
         transform.position = _parentTransform.position + orbit;
         // Rotation
