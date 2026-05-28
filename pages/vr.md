@@ -1,16 +1,17 @@
 ---
 # permalink: /about/
 layout: single
-title: "VR"
+title: "OpenXR"
 classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2025-06-01
+last_modified_at: 2026-05-28
 ---
 
 # BallSpawner
 
+In Assets/Scripts/BallSpawner.cs,
 ```csharp
 using UnityEngine;
 
@@ -38,8 +39,9 @@ public class BallSpawner : MonoBehaviour
 }
 ```
 
-# DuckManager
+# GlassManager
 
+In Assets/Scripts/GlassManager.cs,
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -73,6 +75,7 @@ public class DuckManager : MonoBehaviour
 
 # DestroyOnCollideWithTag
 
+In Assets/Scripts/DestroyOnCollideWithTag.cs,
 ```csharp
 using System.Collections;
 using System.Collections.Generic;
@@ -97,6 +100,7 @@ public class DestroyOnCollideWithTag : MonoBehaviour
 
 # NPCBehavior
 
+In Assets/Scripts/NPCBehavior.cs,
 ```csharp
 using Unity.XR.CoreUtils;
 using UnityEngine;
