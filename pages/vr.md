@@ -43,32 +43,34 @@ public class BallSpawner : MonoBehaviour
 
 In Assets/Scripts/GlassManager.cs,
 ```csharp
-using System.Collections;
-using System.Collections.Generic;
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 
-public class DuckManager : MonoBehaviour
+public class GlassManager : MonoBehaviour
 {
-    // [SerializeField] private Transform[] possibleDuckSpawns;
-    [SerializeField] private GameObject[] duckVariants;
+    // [SerializeField] private Transform[] possibleGlassSpawns;
+    [SerializeField] private GameObject[] glassVariants;
 
     void Start()
     {
-        SpawnDuck();
+        SpawnGlass();
     }
 
-    public void SpawnDuck()
+    public void SpawnGlass()
     {
-        // Transform spawnPos = possibleDuckSpawns[Random.Range(0, possibleDuckSpawns.Length)];
-        GameObject duckVariant = duckVariants[Random.Range(0, duckVariants.Length)];
-        duckVariant.transform.position = transform.position;
+        // Transform spawnPos = possibleGlassSpawns[Random.Range(0, possibleGlassSpawns.Length)];
+        GameObject glassVariant = glassVariants[Random.Range(0, glassVariants.Length)];
+        glassVariant.transform.position = transform.position;
         // y, z axes are inverted?
-        duckVariant.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), 0.0f));
-        // duckVariant.transform.Translate(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f));
-        // Debug.Log("Spawning duck at rotation: " + duckVariant.transform.localRotation);
-        duckVariant.transform.localRotation = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.forward);
-        GameObject newObject = Instantiate(duckVariant, transform);
+        glassVariant.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), 0.0f));
+        // glassVariant.transform.Translate(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f));
+        // Debug.Log("Spawning glass at rotation: " + glassVariant.transform.localRotation);
+        glassVariant.transform.localRotation = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.forward);
+        GameObject newObject = Instantiate(glassVariant, transform);
         newObject.SetActive(true);
+        Debug.Log("newObject: " + newObject.name);
+        
     }
 }
 ```
@@ -77,8 +79,8 @@ public class DuckManager : MonoBehaviour
 
 In Assets/Scripts/DestroyOnCollideWithTag.cs,
 ```csharp
-using System.Collections;
-using System.Collections.Generic;
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
