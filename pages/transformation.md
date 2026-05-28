@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2026-04-27
+last_modified_at: 2026-05-11
 ---
 
 # Prerequisites
@@ -158,7 +158,7 @@ public class Rotation : MonoBehaviour
     void Update()
     {
         // RotateAroundPivot();
-        // RotateAroundPoint();
+        RotateAroundPoint();
     }
 
     void RotateAroundPivot()
@@ -185,12 +185,12 @@ public class Rotation : MonoBehaviour
 }
 ```
 
+Potential errors: If the result does not look quite right, check if the parent postions are all at (0,0,0).
 
 * RotateAround
   * Step1: Create an empty game object, name SolarSystem.
-  * Step2: Create three sphere game objects, name Sun (s=1), Earth (s=0.5, z=2), and Moon (s=0.3. z=1.2). Drag game objects to be nested in hierarchy of SolarSystem. Attach the script to Earth and later Moon.
-
-
+  * Step2: Create three sphere game objects, name Sun (s=1), Earth (s=0.5, z=2.0), and Moon (s=0.3, z=1.5). Drag game objects to be nested in hierarchy of SolarSystem. Moon appears to the the child of Earth, and Earth is the child of the Sun. Attach the script to Earth and later Moon.
+  
 In Assets/Scripts/Transformation/SolarSystem.cs
 ```csharp
 using System;
@@ -202,7 +202,7 @@ using UnityEngine;
 public class SolarSystem : MonoBehaviour
 {
     // For animation
-    private float degreesPerSecond = 20.0f;
+    private float _degreesPerSecond = 20.0f;
     private Transform _parentTransform;
     private Vector3 _direction;
     private float _angle;
@@ -215,9 +215,9 @@ public class SolarSystem : MonoBehaviour
         _parentTransform = transform.parent;
 
         // Unit vector
-        _direction = (transform.position - _parentTransform.transform.position).normalized;
+        _direction = (transform.position - _parentTransform.position).normalized;
         // Distance between the parent and the object
-        _radius = Vector3.Distance(_parentTransform.transform.position, transform.position);
+        _radius = Vector3.Distance(_parentTransform.position, transform.position);
     }
 
     // Start is called before the first frame update
@@ -236,7 +236,7 @@ public class SolarSystem : MonoBehaviour
     {
         Debug.Log(_parentTransform.position);
         // Revolution
-        transform.RotateAround(_parentTransform.position, Vector3.up, degreesPerSecond * Time.deltaTime);
+        transform.RotateAround(_parentTransform.position, Vector3.up, _degreesPerSecond * Time.deltaTime);
         // Rotation
         // Difference with RotateOrbitSlant(): the parent angle will be added to children angle
         // transform.Rotate( Vector3.up, 0.5f);
@@ -245,15 +245,15 @@ public class SolarSystem : MonoBehaviour
 
     internal void RotateOrbitSlant()
     {
-        _angle += degreesPerSecond * Time.deltaTime;
-        _angle %= 360;
+        _angle += _degreesPerSecond * Time.deltaTime;
+        // _angle %= 360;
         // Debug.Log("angle = " + angle);
 
         // Rotate a vector by multiplying it by a Quaternion
         // Vector3.forward Z-Axis unit vector
         Vector3 orbit = Vector3.forward * _radius;
         // orbit = Quaternion.Euler(0, angle, 0) * orbit;
-        orbit = Quaternion.LookRotation(_direction) * Quaternion.Euler(0, _angle, 0) * orbit;
+        orbit = Quaternion.LookRotation(_direction) * Quaternion.Euler(0, _angle%360, 0) * orbit;
         // Revolution
         transform.position = _parentTransform.position + orbit;
         // Rotation

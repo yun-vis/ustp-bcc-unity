@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2026-04-27
+last_modified_at: 2026-05-12
 ---
 
 # Raycasting
@@ -156,7 +156,8 @@ public class RaycastReflection : MonoBehaviour
             {
                 _lineRenderer.positionCount += 1;
                 _lineRenderer.SetPosition(_lineRenderer.positionCount-1, _hitData.point);
-                remainingLength -= Vector3.Distance(_ray.origin, _hitData.point);
+                // remainingLength -= Vector3.Distance(_ray.origin, _hitData.point);
+                remainingLength -= _hitData.distance;
 
                 if (_hitData.collider.tag == "Mirror"){
                     // _hitData.normal stores the normal of the surface the ray hit. 
@@ -179,9 +180,9 @@ public class RaycastReflection : MonoBehaviour
 
 ## Bézier Curve in Unity
 
-* Pre-setting before scripts
+* Pre-setting for scripts
   * Step1: Create an empty game object, name Curve.
-  * Step2: Create 4 empty game objects, name ControlPoint1-4 and select icon for them (under inspector text).
+  * Step2: Create 4 empty game objects, name ControlPoint1-4 and select icon for them (under inspector text). Move the ControlPoints so they become the children of the Curve.
   * Step3: Drag the curve script to the Curve game object and set control points to 4
   * Step4: Drag control points to the corresponding control point elements
 
@@ -191,7 +192,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Pre-setting before scripts
+// Pre-setting for scripts
 // Step1: Create an empty game object, name Curve.
 // Step2: Create 4 empty game objects, name ControlPoint1-4 and select icon for them (under inspector text). ControlPoints should be placed as children of the Curve object
 // Step3: Drag the curve script to the Curve game object and set control points to 4
@@ -225,8 +226,6 @@ public class Curve2D : MonoBehaviour
         // Draw the lines between the control points
         Gizmos.DrawLine(controlPoints[0].position, controlPoints[1].position);
         Gizmos.DrawLine(controlPoints[2].position, controlPoints[3].position);
-        // Gizmos.DrawLine(new Vector2(controlPoints[0].position.x, controlPoints[0].position.y), new Vector2(controlPoints[1].position.x, controlPoints[1].position.y));
-        // Gizmos.DrawLine(new Vector2(controlPoints[2].position.x, controlPoints[2].position.y), new Vector2(controlPoints[3].position.x, controlPoints[3].position.y));
     }
 }
 ```
@@ -236,7 +235,6 @@ In Assets/Scripts/Linear/Curve3D.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 public class Curve3D : MonoBehaviour
 {
@@ -266,29 +264,26 @@ public class Curve3D : MonoBehaviour
         // Draw the lines between the control points
         Gizmos.DrawLine(controlPoints[0].position, controlPoints[1].position);
         Gizmos.DrawLine(controlPoints[2].position, controlPoints[3].position);
-        // Gizmos.DrawLine(new Vector3(controlPoints[0].position.x, controlPoints[0].position.y, controlPoints[0].position.z), new Vector3(controlPoints[1].position.x, controlPoints[1].position.y, controlPoints[1].position.z));
-        // Gizmos.DrawLine(new Vector3(controlPoints[2].position.x, controlPoints[2].position.y, controlPoints[2].position.z), new Vector3(controlPoints[3].position.x, controlPoints[3].position.y, controlPoints[3].position.z));
     }
 }
 ```
 
-* Pre-setting before scripts
+* Pre-setting for scripts
   * Step1: Create a cube game object called Follower and attach the script to it.
-  * Step2: Change the Route size in the inspector to 1 and drag the Curve object there.
-  * Step3 (Optional): Create the 2nd Curve object and change the Route size to 2 in the inspector.
+  * Step2: Change the Curve size in the inspector to 1 and drag the Curve object there.
+  * Step3 (Optional): Create the 2nd Curve object and change the Curve size to 2 in the inspector.
 
 In Assets/Scripts/Linear/CurveFollow.cs
 ```csharp
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CurveFollow : MonoBehaviour
 {
     [SerializeField]
-    Transform[] routes;
+    Transform[] curves;
 
-    private int _routeToFollow;
+    private int _curveID;
     private float _tParam;
     private float _speedModifier;
     private bool _coroutineAllowed;
@@ -296,8 +291,8 @@ public class CurveFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _routeToFollow = 0;
-        _tParam = 0f;
+        _curveID = 0;
+        _tParam = 0.0f;
         _speedModifier = 0.3f;
         _coroutineAllowed = true;
     }
@@ -307,19 +302,19 @@ public class CurveFollow : MonoBehaviour
     {
         if (_coroutineAllowed)
         {
-            StartCoroutine(FollowTheRoute(_routeToFollow));
+            StartCoroutine(FollowTheCurve(_curveID));
         }
     }
 
     // This function will be executed across the frames    
-    private IEnumerator FollowTheRoute(int routeNum)
+    private IEnumerator FollowTheCurve(int curveID)
     {
         _coroutineAllowed = false;
 
-        Vector3 p0 = routes[routeNum].GetChild(0).position;
-        Vector3 p1 = routes[routeNum].GetChild(1).position;
-        Vector3 p2 = routes[routeNum].GetChild(2).position;
-        Vector3 p3 = routes[routeNum].GetChild(3).position;
+        Vector3 p0 = curves[curveID].GetChild(0).position;
+        Vector3 p1 = curves[curveID].GetChild(1).position;
+        Vector3 p2 = curves[curveID].GetChild(2).position;
+        Vector3 p3 = curves[curveID].GetChild(3).position;
 
         while (_tParam < 1)
         {
@@ -334,10 +329,10 @@ public class CurveFollow : MonoBehaviour
             yield return null;
         }
 
-        // Reset the tParam to 0 and move to the next route
+        // Reset the tParam to 0 and move to the next curve
         _tParam = 0.0f;
-        _routeToFollow += 1;
-        _routeToFollow %= routes.Length;
+        _curveID += 1;
+        _curveID %= curves.Length;
         _coroutineAllowed = true;
     }
 }
