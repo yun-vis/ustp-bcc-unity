@@ -111,7 +111,7 @@ public class DestroyOnCollideWithTag : MonoBehaviour
 
 In Assets/Scripts/NPCBehavior.cs,
 ```csharp
-using Unity.XR.CoreUtils;
+// using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class NPCBehavior : MonoBehaviour
@@ -139,17 +139,19 @@ public class NPCBehavior : MonoBehaviour
         {
             Debug.Log("isPondActivated: " + isPondActivated);
             // Activate the water and deactivate the rocks
-            plane.transform.GetChild(0).gameObject.SetActive(true);
+            plane.transform.GetChild(0).gameObject.SetActive(false);
             plane.transform.GetChild(1).gameObject.SetActive(false);
             pondTelepotationArea.transform.GetChild(2).gameObject.SetActive(false);
+            pondTelepotationArea.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false;
         }
         else
         {
             Debug.Log("isPondActivated: " + isPondActivated);
             // Deactivate the water and activate the rocks
-            plane.transform.GetChild(0).gameObject.SetActive(false);
+            plane.transform.GetChild(0).gameObject.SetActive(true);
             plane.transform.GetChild(1).gameObject.SetActive(true);
             pondTelepotationArea.transform.GetChild(2).gameObject.SetActive(true);
+            pondTelepotationArea.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false;
         }
     }
 
