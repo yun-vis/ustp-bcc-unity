@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2026-05-28
+last_modified_at: 2026-06-02
 ---
 
 # BallSpawner
@@ -52,25 +52,32 @@ public class GlassManager : MonoBehaviour
     // [SerializeField] private Transform[] possibleGlassSpawns;
     [SerializeField] private GameObject[] glassVariants;
 
-    void Start()
+    void Awake()
     {
         SpawnGlass();
     }
 
     public void SpawnGlass()
     {
+        Debug.Log("Spawning glass...");
         // Transform spawnPos = possibleGlassSpawns[Random.Range(0, possibleGlassSpawns.Length)];
         GameObject glassVariant = glassVariants[Random.Range(0, glassVariants.Length)];
         glassVariant.transform.position = transform.position;
-        // y, z axes are inverted?
-        glassVariant.transform.Translate(new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), 0.0f));
+        // glassVariant.transform.position = new Vector3(transform.position.x, 0.8f, transform.position.z);
+        // y, z axes are inverted? Only for the rubber duck assets
+        Debug.Log("Spawning glass at position: " + transform.position);
+
+        glassVariant.transform.Translate(new Vector3(Random.Range(-1.0f, 1.0f), glassVariant.transform.position.y + 0.8f, Random.Range(-1.0f, 1.0f)));
+
+        Debug.Log("Spawning glass at glassVariant.position: " + glassVariant.transform.position);
         // glassVariant.transform.Translate(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f));
         // Debug.Log("Spawning glass at rotation: " + glassVariant.transform.localRotation);
-        glassVariant.transform.localRotation = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.forward);
-        GameObject newObject = Instantiate(glassVariant, transform);
+        glassVariant.transform.localRotation = Quaternion.AngleAxis(Random.Range(-35, 35), Vector3.forward);
+
+        GameObject newObject = Instantiate(glassVariant, glassVariant.transform.position, glassVariant.transform.rotation);
         newObject.SetActive(true);
         Debug.Log("newObject: " + newObject.name);
-        
+
     }
 }
 ```
